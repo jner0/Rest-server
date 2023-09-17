@@ -1,6 +1,5 @@
 const { response } = require("express");
 const bcryptjs = require("bcryptjs");
-
 const Usuario = require("../models/usuario");
 
 const usuariosGet = (req, res = response) => {
@@ -18,8 +17,6 @@ const usuariosGet = (req, res = response) => {
 const usuariosPost = async (req, res) => {
   const { nombre, correo, password, rol } = req.body;
   const usuario = new Usuario({ nombre, correo, password, rol });
-
-  //Verificar si el correo existe
 
   //Encriptar la contrasena
   const salt = bcryptjs.genSaltSync(); //que tan complicado queremos la encriptacion(numero de vueltas por defecto 10)

@@ -32,4 +32,10 @@ const UsuarioSchema = Schema({
   },
 });
 
+//Para que al momento de realizar la peticion no me muestre visualmenteen la respuesta ni la version ni la password
+UsuarioSchema.methods.toJSON = function () {
+  const { __v, password, ...usuario } = this.toObject();
+  return usuario;
+};
+
 module.exports = model("Usuario", UsuarioSchema);
