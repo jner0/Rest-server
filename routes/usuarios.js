@@ -2,7 +2,11 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 
 const { validarCampos } = require("../middlewares/validar-campos");
-const { esRoleValido, emailEsxiste } = require("../helpers/db-validators");
+const {
+  esRoleValido,
+  emailEsxiste,
+  existeUsuarioPorId,
+} = require("../helpers/db-validators");
 
 const {
   usuariosGet,
@@ -30,7 +34,16 @@ router.post(
   ],
   usuariosPost
 ); //El segundo argumento serian los middlewars, en este caso con express validator
-router.put("/:id", usuariosPut);
+router.put(
+  "/:id",
+  [
+    check("id", "No es un Id válido").isMongoId(),
+    check("id").custom(existeUsuarioPorId),
+    check("rol").custom(esRoleValido),
+    validarCampos,
+  ],
+  usuariosPut
+);
 router.patch("/", usuariosPatch);
 router.delete("/", usuariosDelete);
 
