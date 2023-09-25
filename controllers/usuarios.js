@@ -2,16 +2,11 @@ const { response } = require("express");
 const bcryptjs = require("bcryptjs");
 const Usuario = require("../models/usuario");
 
-const usuariosGet = (req, res = response) => {
-  const { q, nombre = "No name", apikey, page = 1, limit } = req.query;
-  res.json({
-    msg: "get API - controlador",
-    q,
-    nombre,
-    apikey,
-    page,
-    limit,
-  });
+const usuariosGet = async (req, res = response) => {
+  // const { q, nombre = "No name", apikey, page = 1, limit } = req.query;
+  const { limite = 5, desde = 0 } = req.query;
+  const usuarios = await Usuario.find().skip(desde).limit(Number(limite));
+  res.json({ usuarios });
 };
 
 const usuariosPost = async (req, res) => {
@@ -32,7 +27,7 @@ const usuariosPost = async (req, res) => {
 
 const usuariosPut = async (req, res = response) => {
   const { id } = req.params;
-  const { _id, password, google, correo,...resto } = req.body;
+  const { _id, password, google, correo, ...resto } = req.body;
 
   //Validar contra base de datos
 
@@ -46,7 +41,7 @@ const usuariosPut = async (req, res = response) => {
 
   res.json({
     msg: "put API - controlador",
-    usuario
+    usuario,
   });
 };
 
