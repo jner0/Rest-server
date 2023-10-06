@@ -28,7 +28,7 @@ const obtenerProductoPorId = async (req, res = response) => {
 };
 
 const crearProducto = async (req, res = response) => {
-  const nombre = req.body.nombre.toUpperCase();
+  const nombre = req.body.nombre.toUpperCase(); //podriasmos desestructurar  ddesde req.body = {...body}
 
   const productoDB = await Producto.findOne({ nombre });
   if (productoDB) {
@@ -39,7 +39,7 @@ const crearProducto = async (req, res = response) => {
   const data = {
     nombre,
     usuario: req.usuario._id,
-    categoria: req.body.categoriaId,
+    categoria: req.body.categoria,
     precio: req.body.precio,
     descripcion: req.body.descripcion,
     estado: req.body.estado,
@@ -54,19 +54,15 @@ const crearProducto = async (req, res = response) => {
 const actualizarProducto = async (req, res = response) => {
   const { id } = req.params;
 
-  const { estado, ...data } = req.body;
+  const { estado, usuario, ...data } = req.body;
 
-  const updatedData = {
-    nombre: data.nombre.toUpperCase(),
-    usuario: req.usuario._id,
-    categoria: data.categoriaId,
-    precio: data.precio,
-    descripcion: data.descripcion,
-    estado: data.estado,
-    disponible: data.disponible,
-  };
+  if (data.nombre) {
+    data.nombre = data.nombre.toUpperCase();
+  }
 
-  const producto = await Producto.findByIdAndUpdate(id, updatedData, {
+  data.usuario = req.usuario._id;
+
+  const producto = await Producto.findByIdAndUpdate(id, data, {
     new: true,
   });
 
