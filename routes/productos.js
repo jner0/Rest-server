@@ -8,6 +8,7 @@ const {
 } = require("../controllers/productos");
 const { validarJWT, validarCampos, esAdminRole } = require("../middlewares");
 const { check } = require("express-validator");
+const { existeProducto } = require("../helpers/db-validators");
 
 const router = Router();
 
@@ -15,7 +16,11 @@ router.get("/", obtenerProductos);
 
 router.get(
   "/:id",
-  [check("id", "No es un ID  deMongo").isMongoId(), validarCampos],
+  [
+    check("id", "No es un ID  deMongo").isMongoId(),
+    check("id").custom(existeProducto),
+    validarCampos,
+  ],
   obtenerProductoPorId
 );
 
@@ -35,6 +40,7 @@ router.put(
   [
     validarJWT,
     check("nombre", "El nombre es obligatorio").not().isEmpty(),
+    check("id").custom(existeProducto),
     check("categoriaId", "La categoria es obligatoria").not().isEmpty(),
     validarCampos,
   ],
@@ -47,6 +53,7 @@ router.delete(
     validarJWT,
     esAdminRole,
     check("id", "No es un ID  deMongo").isMongoId(),
+    check("id").custom(existeProducto),
     validarCampos,
   ],
   eliminarProducto
