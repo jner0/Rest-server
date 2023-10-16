@@ -8,6 +8,7 @@ const subirArchivo = (
 ) => {
   return new Promise((resolve, reject) => {
     const { archivo } = files;
+
     const nombreCortado = archivo.name.split(".");
     const extension = nombreCortado[nombreCortado.length - 1];
 
